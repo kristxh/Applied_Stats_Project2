@@ -25,7 +25,6 @@ setwd('C:/Users/Ronny Sherga/Google Drive/SMU_Masters/Term_2/Stats 2/Project 2/D
 bankaddlfull<-read.csv('bank-additional-full.csv', header = T, sep = ";", stringsAsFactors = T)
 
 #export the df to a standard excel table format so we can quickly and easily investigate more about it.
-write.csv(bankaddlfull, "rewrite.csv", row.names = F)
 
 #verify vars that should be factors
 tibble(bankaddlfull)
