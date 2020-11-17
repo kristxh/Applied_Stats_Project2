@@ -1,5 +1,6 @@
 library(MASS)
 library(ggplot2)
+library(ggthemes)
 library(dplyr)
 library(e1071)
 library(caret)
@@ -14,7 +15,13 @@ library(rminer)#variable importance for NB
 library(rms)
 library(GGally)
 library(tidyverse)
-
+library(gridExtra)
+library(ISLR)
+library(ResourceSelection)
+library(glmnet)
+library(bestglm)
+library(car)
+library(naniar)
 
 set.seed(1234)
 
@@ -81,16 +88,15 @@ bankaddlfull$month[which(bankaddlfull$month == "nov")] <- "November"
 bankaddlfull$month[which(bankaddlfull$month == "oct")] <- "October"
 bankaddlfull$month[which(bankaddlfull$month == "sep")] <- "September"
 
-
 #drop unused levels
 bankaddlfull[] <- lapply(bankaddlfull, function(x) if (is.factor(x)) factor(x) else x)
 sapply((Filter(is.factor,bankaddlfull)), levels)
 
 #check for uneven response variable
-table(bankaddlfull$y)
+table(bankaddlfull$success)
+
 #how many pdays are 999?
 nrow(bankaddlfull[which(bankaddlfull$pdays == 999),])
-
 
 #downsample to randomly give sample with same number of Yes/No
 # dfNo <- bankaddlfull[which(bankaddlfull$y == "no"),]
@@ -102,7 +108,6 @@ nrow(bankaddlfull[which(bankaddlfull$pdays == 999),])
 
 
 attach(bankaddlfull)
-
 downdf <- downSample(bankaddlfull, success)
 downdf <- subset(downdf, select = -c(Class))
 
