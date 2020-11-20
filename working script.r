@@ -64,12 +64,7 @@ missmap(bankaddlfull)
 bankaddlfull[which(is.na(bankaddlfull)),]
 
 #convert all "unknown" and "nonexistent" to NA in dataframe.
-bankaddlfull$job[which(job == "unknown")] <- NA
-bankaddlfull$marital[which(marital == "unknown")] <- NA
-bankaddlfull$education[which(education == "unknown")] <- NA
-bankaddlfull$default[which(default == "unknown")] <- NA
-bankaddlfull$housing[which(housing == "unknown")] <- NA
-bankaddlfull$loan[which(loan == "unknown")] <- NA
+bankaddlfull[bankaddlfull=="unknown"] <-NA
 bankaddlfull$poutcome[which(poutcome == "nonexistent")] <- NA
 
 #n/a plot
