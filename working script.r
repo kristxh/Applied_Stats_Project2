@@ -238,5 +238,83 @@ summary(model.main)
 #using the summary coefficients we can generate CIs
 exp(cbind("Odds ratio" = coef(model.main), confint.default(model.main, level = 0.95)))
 
-#add complexity and repeat steps above
-#pick up at line 204 from example code
+##############LDA########################
+mylda<-lda(success~age+duration+campaign+previous+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed,data=train)
+pred_l<-predict(mylda,newdata=test)$class  #Predictions can come in many forms, the class form provides the categorical level of your response.
+truth_l<-test$success
+x_l<-table(pred_l,truth_l) # Creating a confusion matrix
+x_l
+dim(test)
+nrow(test)
+
+#Missclassification Error
+ME_lda<-(x_l[2,1]+x_l[1,2])/nrow(test)
+ME_lda
+#Calculating overall accuracy
+1-ME_lda
+
+#Sensitivity
+SEN_lda <- x_l[2,2]/(x_l[1,2]+x_l[2,2])
+SEN_lda
+
+#specificity
+SPEC_lda <- x_l[1,1]/(x_l[1,1]+x_l[2,1])
+SPEC_lda
+
+##############QDA########################
+
+#QDA
+myqda<-qda(success~age+duration+campaign+previous+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed,data=train)
+pred_q<-predict(myqda,newdata=test)$class  #Predictions can come in many forms, the class form provides the categorical level of your response.
+truth_q<-test$success
+x_q<-table(pred_q,truth_q) # Creating a confusion matrix
+x_q
+
+#Missclassification Error
+ME_qda<-(x_q[2,1]+x_q[1,2])/nrow(test)
+ME_qda
+#Calculating overall accuracy
+1-ME_qda
+
+#sensitivity
+SEN_qda <- x_l[2,2]/(x_l[1,2]+x_l[2,2])
+SEN_qda
+
+#specificity
+SPEC_qda <- x_l[1,1]/(x_l[1,1]+x_l[2,1])
+SPEC_qda
+
+############Random Forest#################
+
+rf <- randomForest(
+  success ~ .,
+  data=train
+)
+
+pred_rf = predict(rf, newdata=test)
+cm_rf = table(test[,20], pred_rf)
+
+#Missclassification Error
+ME_rf<-(cm_rf[2,1]+ cm_rf[1,2])/nrow(test)
+ME_rf
+#Calculating overall accuracy
+1-ME_rf
+
+#sensitivity
+SEN_rf <- x_l[2,2]/(x_l[1,2]+x_l[2,2])
+SEN_rf
+
+#specificity
+SPEC_rf <- x_l[1,1]/(x_l[1,1]+x_l[2,1])
+SPEC_rf
+
+# Tuning to find mtry value
+tuneRF(downdf, success)
+
+# Importance of variables
+importance(rf)
+varImpPlot(rf)
+
+# Print
+print(rf)
+
